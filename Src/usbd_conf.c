@@ -622,6 +622,7 @@ void  USBD_LL_Delay(uint32_t Delay){
 void *USBD_static_malloc(uint32_t size){
   static uint32_t mem[(sizeof(USBD_CDC_HandleTypeDef)/4)+1];/* On 32-bit boundary */
   return mem;
+  (void)size;
 }
 
 /**
@@ -630,7 +631,7 @@ void *USBD_static_malloc(uint32_t size){
   * @retval None
   */
 void USBD_static_free(void *p){
-
+  (void)p;
 }
 
 
@@ -655,12 +656,9 @@ void HAL_PCDEx_SetConnectionState(PCD_HandleTypeDef *hpcd, uint8_t state){
 
   if(state == 1){
     /* Configure Low Connection State */
-	
   }
   else{
     /* Configure High Connection State */
-   
-  } 
+  }
+  (void)hpcd;
 }
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

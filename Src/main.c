@@ -35,15 +35,9 @@
 */
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32f0xx_hal.h"
 #include "tim.h"
 #include "gpio.h"
 #include "adc.h"
-#include "usb_device.h"
-#include "usbd_cdc_if.h"
-
-
-//#define USE_USB_LOG    1
 
 #define TH0   (500)
 #define TH1   (1600)
@@ -193,7 +187,8 @@ int main( void )
   */
 void receive_usb_data( uint8_t* Buf, uint32_t* Len )
 {
-
+    (void)Buf;
+    (void)Len;
 }
 
 /**
@@ -205,6 +200,8 @@ void _Error_Handler(char * file, int line)
 {
     /* User can add his own implementation to report the HAL error return state */
     while(1) {}
+    (void)file;
+    (void)line;
 }
 
 #ifdef USE_FULL_ASSERT
@@ -227,5 +224,3 @@ void assert_failed(uint8_t* file, uint32_t line)
 
 #endif
 
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

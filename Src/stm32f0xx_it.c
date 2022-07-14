@@ -4,14 +4,8 @@
 #include "stm32f0xx_hal.h"
 #include "stm32f0xx_it.h"
 
-
-
-
-
-
 /* External variables --------------------------------------------------------*/
 extern PCD_HandleTypeDef hpcd_USB_FS;
-
 
 
 /******************************************************************************/
@@ -74,4 +68,3 @@ void USB_IRQHandler(void)
     HAL_PCD_IRQHandler( &hpcd_USB_FS );
 }
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
