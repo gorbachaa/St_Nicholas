@@ -5,7 +5,6 @@
  **/
 
 #include "gpio.h"
-#include "stm32f0xx_hal.h"
 
 GPIO_InitTypeDef GPIO_InitStruct;
 

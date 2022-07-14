@@ -1,27 +1,6 @@
-/**
-  ******************************************************************************
-  * File Name          : ADC.c
-  * Description        : This file provides code for the configuration
-  *                      of the ADC instances.
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2022 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
-  *
-  ******************************************************************************
-  */
 
 /* Includes ------------------------------------------------------------------*/
 #include "adc.h"
-#include "stm32f0xx_hal.h"
-
-
 
 ADC_HandleTypeDef hadc;
 
@@ -82,8 +61,5 @@ void HAL_ADC_MspDeInit( ADC_HandleTypeDef* adcHandle )
     /* ADC GPIO Configuration PA0 ------> ADC_IN0 */
     HAL_GPIO_DeInit( GPIOA, GPIO_PIN_0 );
   }
-} 
+}
 
-
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
