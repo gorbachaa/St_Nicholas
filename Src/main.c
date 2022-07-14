@@ -38,6 +38,10 @@
 #include "tim.h"
 #include "gpio.h"
 #include "adc.h"
+#ifdef USE_USB_LOG
+#include "usb_device.h"
+#include "usbd_cdc_if.h"
+#endif
 
 #define TH0   (500)
 #define TH1   (1600)

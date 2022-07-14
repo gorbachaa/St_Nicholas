@@ -58,7 +58,7 @@ set(HSE_VALUE             8000000)
 set(BOARD_NAME "st-nicklas-0" CACHE STRING "Name of board builds for.")
 mark_as_advanced(BOARD_NAME)
 set(BOARD_VERSION 0)
-option(BUILD_AS_APP "Build APP variant" OFF)
+
 set(COMM_BAUDRATE 115200)
 set(DEBUG_BAUDRATE 115200)
 set(MCU STM32F042x6)
@@ -74,6 +74,8 @@ set(CMAKE_C_EXTENSIONS ON)
 if( NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
+
+option(USE_USB_LOG "Enable logging through USB-CDC" OFF)
 
 #------------ FLAGS ------------------------------------------------------------
 set(MCU_ARCH      -mcpu=cortex-m0 -mthumb)
@@ -106,7 +108,11 @@ reject_dir_pattern( RTOS  SRC_LIST)
 
 SOURCE_GROUP(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SRC_LIST})
 
-add_executable(${TARGET_ELF} ${SRC_LIST} ${SRC_COMMON} ${HAL_SRC})
+set(IDE_LIST
+    README.md
+)
+
+add_executable(${TARGET_ELF} ${SRC_LIST} ${SRC_COMMON} ${IDE_LIST})
 target_compile_options(${TARGET_ELF}
     PRIVATE
         ${MCU_ARCH}
@@ -147,6 +153,7 @@ target_compile_definitions(${TARGET_ELF}
         COMM_BAUDRATE=${COMM_BAUDRATE}
         DEBUG_BAUDRATE=${DEBUG_BAUDRATE}
         $<$<COMPILE_LANGUAGE:CXX>:register={}>
+        $<IF:$<BOOL:${USE_USB_LOG}>,USE_USB_LOG,>
 )
 
 add_custom_command(TARGET ${TARGET_ELF} POST_BUILD
