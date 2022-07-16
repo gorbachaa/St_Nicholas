@@ -41,7 +41,7 @@ Middlewares
 PERIFLIB_PATH = 
 
 # Build path
-BUILD_DIR = build
+BUILD_DIR = ../build-$(TARGET)_ARM32_GCC_Makefile
 
 ######################################
 # source
@@ -100,15 +100,14 @@ PERIFLIB_SOURCES =
 #######################################
 # binaries
 #######################################
-BINPATH = 
 PREFIX = arm-none-eabi-
-CXX = $(BINPATH)/$(PREFIX)g++
-CC = $(BINPATH)/$(PREFIX)gcc
-AS = $(BINPATH)/$(PREFIX)gcc -x assembler-with-cpp
-LD = $(BINPATH)/$(PREFIX)g++
-CP = $(BINPATH)/$(PREFIX)objcopy
-AR = $(BINPATH)/$(PREFIX)ar
-SZ = $(BINPATH)/$(PREFIX)size
+CXX = $(PREFIX)g++
+CC = $(PREFIX)gcc
+AS = $(PREFIX)gcc -x assembler-with-cpp
+LD = $(PREFIX)g++
+CP = $(PREFIX)objcopy
+AR = $(PREFIX)ar
+SZ = $(PREFIX)size
 OBJDUMP = $(BINPATH)/$(PREFIX)objdump
 HEX = $(CP) -O ihex
 BIN = $(CP) -O binary -S

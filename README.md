@@ -4,16 +4,11 @@ Dropping Gifts
 
 ### build with make
 
-For make and build project:
+For build with make you should have proper compiler in PATH env variable.
 
 ```sh
-  make all [BINPATH="/path/to/arm-none-eabi-gcc"] -j 12
-```
-  
-example:
-
-```sh
-  make all BINPATH=C:/ARM_GCC/10_2021.10/bin -j 12
+  make clean
+  make all -j 12
 ```
 
 
