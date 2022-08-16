@@ -1049,6 +1049,8 @@ HAL_StatusTypeDef HAL_PCD_EP_ClrStall(PCD_HandleTypeDef *hpcd, uint8_t ep_addr)
   */
 HAL_StatusTypeDef HAL_PCD_EP_Flush(PCD_HandleTypeDef *hpcd, uint8_t ep_addr)
 { 
+  UNUSED(hpcd);
+  UNUSED(ep_addr);
   return HAL_OK;
 }
 

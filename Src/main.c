@@ -38,6 +38,7 @@
 #include "tim.h"
 #include "gpio.h"
 #include "adc.h"
+//#define USE_USB_LOG 1
 #ifdef USE_USB_LOG
 #include "usb_device.h"
 #include "usbd_cdc_if.h"
@@ -111,15 +112,11 @@ int main( void )
   uint8_t i = 0;
   uint32_t adc_tmp[10];
 
-
+  HAL_Delay( 1000 );
   LED_RED_On();
   MX_TIM2_Init();
-  TIM2->CCR4 = 288;
-  HAL_Delay( 500 );
   TIM2->CCR4 = 200;
   HAL_Delay( 3000 );
-  TIM2->CCR4 = 288;
-  HAL_Delay( 500 );
   MX_TIM2_DeInit();
   LED_RED_Off();
 
@@ -156,12 +153,8 @@ int main( void )
             flag = 0;
             LED_RED_On();
             MX_TIM2_Init();
-            TIM2->CCR4 = 288;
-            HAL_Delay( 500 );
             TIM2->CCR4 = 200;
-            HAL_Delay( 500 );
-            TIM2->CCR4 = 288;
-            HAL_Delay( 500 );
+            HAL_Delay( 1000 );
             MX_TIM2_DeInit();
             LED_RED_Off();
         }
