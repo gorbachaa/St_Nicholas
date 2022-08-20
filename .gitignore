@@ -1,4 +1,7 @@
 /build
+/build*/
 /release
 /.vscode
 *.user
+
+prog_board_WatchDog.cmd

@@ -38,21 +38,20 @@
 #include "tim.h"
 #include "gpio.h"
 #include "adc.h"
-//#define USE_USB_LOG 1
 #ifdef USE_USB_LOG
 #include "usb_device.h"
 #include "usbd_cdc_if.h"
 #endif
 
-#define TH0   (500)
-#define TH1   (1600)
-#define TH2   (3400)
+#define TH0   ( 500 )
+#define TH1   ( 1600 )
+#define TH2   ( 3400 )
 
 
 uint8_t flag = 0;
 
 
-/*** System Clock Configuration*/
+/* System Clock Configuration */
 void SystemClock_Config( void )
 {
   RCC_OscInitTypeDef RCC_OscInitStruct;
@@ -87,7 +86,47 @@ void SystemClock_Config( void )
   HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
 }
 
+/* set gift in drone */
+void set_gift( void )
+{
+    LED_RED_On();
+    MX_TIM2_Init();
+    TIM2->CCR4 = 200;
+    HAL_Delay( 3000 );
+    MX_TIM2_DeInit();
+    LED_RED_Off();
+}
 
+/* dropping gift moskaljam */
+void dropping_gift( void )
+{
+    LED_RED_On();
+    MX_TIM2_Init();
+    TIM2->CCR4 = 200;
+    HAL_Delay( 1000 );
+    MX_TIM2_DeInit();
+    LED_RED_Off();
+}
+
+/* check ON/OFF led */
+int check_led( void )
+{
+    HAL_ADC_Start( &hadc );
+    HAL_Delay(2);
+    uint16_t adc_tmp = HAL_ADC_GetValue( &hadc );
+    HAL_ADC_Stop( &hadc );
+
+#ifdef USE_USB_LOG
+    static char pack[10];
+    __itoa( adc_tmp, pack, 10 );
+    uint8_t len = strlen( pack );
+    pack[len] = 0x0D;
+    pack[len + 1] = 0x0A;
+    CDC_Transmit_FS( (uint8_t*)pack, len + 2 );
+#endif
+
+    return 0;
+}
 
 /**
   * @brief  The application entry point.
@@ -95,85 +134,26 @@ void SystemClock_Config( void )
   */
 int main( void )
 {
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+  /* Init board */
   HAL_Init();
-  /* Configure the system clock */
   SystemClock_Config();
-  /* Initialize all configured peripherals */
   MX_GPIO_Init();
-#ifdef USE_USB_LOG
-  /* USB init function */
-  MX_USB_DEVICE_Init();
-#endif
-  /* ADC init function */
   MX_ADC_Init();
+#ifdef USE_USB_LOG
+  MX_USB_DEVICE_Init();
+#endif  
 
-
-  uint8_t i = 0;
-  uint32_t adc_tmp[10];
 
   HAL_Delay( 1000 );
-  LED_RED_On();
-  MX_TIM2_Init();
-  TIM2->CCR4 = 200;
-  HAL_Delay( 3000 );
-  MX_TIM2_DeInit();
-  LED_RED_Off();
+  set_gift();
+
 
   while( 1 )
   {
-        //LED_GREEN_On();
-        HAL_Delay( 50 );
-
-        HAL_ADC_Start( &hadc );
-        HAL_Delay(2);
-        adc_tmp[i] = HAL_ADC_GetValue( &hadc );
-        HAL_ADC_Stop( &hadc );
-
-        if( adc_tmp[i] > TH0 )
-        {
-            if( adc_tmp[i] > TH2 ) flag++;
-            else                   flag = 0;
-        }
-        else
-        {
-            flag = 0;
-            // ERROR
-            for( uint8_t i = 0; i < 5; i++ )
-            {                
-                LED_RED_On();
-                HAL_Delay( 50 );
-                LED_RED_Off();
-                HAL_Delay( 50 );
-            }
-        }
-
-        if( flag > 3 )
-        {
-            flag = 0;
-            LED_RED_On();
-            MX_TIM2_Init();
-            TIM2->CCR4 = 200;
-            HAL_Delay( 1000 );
-            MX_TIM2_DeInit();
-            LED_RED_Off();
-        }
-
-        //LED_GREEN_Off();
-        HAL_Delay( 50 );
-
-#ifdef USE_USB_LOG
-        static char pack[10];
-        __itoa( adc_tmp[i], pack, 10 );
-        uint8_t len = strlen(pack);
-        pack[len] = 0x0D;
-        pack[len + 1] = 0x0A;
-        CDC_Transmit_FS( (uint8_t*)pack, len + 2 );
-#endif
-        i++;
-        if( i == 10 ) i = 0;
-
+     HAL_Delay( 100 );
+     if( check_led() ) dropping_gift();
   }
+
   return 0;
 }
 

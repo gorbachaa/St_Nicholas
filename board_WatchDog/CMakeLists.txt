@@ -181,14 +181,15 @@ add_custom_command(TARGET ${TARGET_ELF} POST_BUILD
 )
 
 add_custom_command(TARGET ${TARGET_ELF} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E echo "Release dir: ${RELEASE_DIR}"
+    COMMAND ${CMAKE_COMMAND} -E echo "Release dir: $<TARGET_FILE_DIR:${TARGET_ELF}>"
+    COMMAND ${CMAKE_COMMAND} -E echo "release ${TARGET_NAME}.hex "
     COMMAND ${CMAKE_COMMAND} -E echo "release ${TARGET_NAME}.bin "
-    COMMAND ${CMAKE_COMMAND} -E copy
-        "$<TARGET_FILE_DIR:${TARGET_ELF}>/${TARGET_NAME}.bin"
-        "${RELEASE_DIR}/${TARGET_NAME}.bin"
-    COMMAND ${CMAKE_COMMAND} -E echo "release ${TARGET_NAME_VER}.bin "
-    COMMAND ${CMAKE_COMMAND} -E copy
-        "$<TARGET_FILE_DIR:${TARGET_ELF}>/${TARGET_NAME}.bin"
-        "${RELEASE_DIR}/${TARGET_NAME_VER}.bin"
+    #COMMAND ${CMAKE_COMMAND} -E copy
+    #    "$<TARGET_FILE_DIR:${TARGET_ELF}>/${TARGET_NAME}.bin"
+    #    "${RELEASE_DIR}/${TARGET_NAME}.bin"
+    #COMMAND ${CMAKE_COMMAND} -E echo "release ${TARGET_NAME_VER}.bin "
+    #COMMAND ${CMAKE_COMMAND} -E copy
+    #    "$<TARGET_FILE_DIR:${TARGET_ELF}>/${TARGET_NAME}.bin"
+    #    "${RELEASE_DIR}/${TARGET_NAME_VER}.bin"
 )
 
