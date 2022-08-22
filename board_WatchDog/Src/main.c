@@ -35,6 +35,7 @@
 */
 
 /* Includes ------------------------------------------------------------------*/
+#include <stdlib.h>
 #include "tim.h"
 #include "gpio.h"
 #include "adc.h"
@@ -43,15 +44,31 @@
 #include "usbd_cdc_if.h"
 #endif
 
-#define TH0   ( 500 )
-#define TH1   ( 1600 )
-#define TH2   ( 3400 )
 
 
-uint8_t flag = 0;
+#define THRESHOLD_UP  ( 3900 )
+#define THRESHOLD_DN  ( 3700 )
+
+#define WAVE          ( 60 )
+
+#define DATA_SIZE     ( 4 )              // 4, 8, 16, 32
+#define DATA_MASK     ( DATA_SIZE - 1 )
+
+uint8_t full_buff = 0;
+
+uint16_t now_data  = 0;
+uint16_t last_data = 0;
+
+uint16_t raw_data[DATA_SIZE];
+uint8_t  raw_data_idx = 0;
+
+uint16_t dif_data[DATA_SIZE];
+uint8_t  dif_data_idx = 0;
 
 
-/*** System Clock Configuration*/
+
+
+/* System Clock Configuration */
 void SystemClock_Config( void )
 {
   RCC_OscInitTypeDef RCC_OscInitStruct;
@@ -86,7 +103,7 @@ void SystemClock_Config( void )
   HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
 }
 
-// set gift in drone
+/* set gift in drone */
 void set_gift( void )
 {
     LED_RED_On();
@@ -97,7 +114,7 @@ void set_gift( void )
     LED_RED_Off();
 }
 
-// dropping gift moskaljam
+/* dropping gift moskaljam */
 void dropping_gift( void )
 {
     LED_RED_On();
@@ -105,26 +122,63 @@ void dropping_gift( void )
     TIM2->CCR4 = 200;
     HAL_Delay( 1000 );
     MX_TIM2_DeInit();
+    HAL_Delay( 1000 );
     LED_RED_Off();
 }
 
-int check_led( void )
+/* check ON/OFF led */
+uint8_t check_led( void )
 {
+    last_data = now_data;
+
+    // Read ADC value
     HAL_ADC_Start( &hadc );
-    HAL_Delay(2);
-    uint16_t adc_tmp = HAL_ADC_GetValue( &hadc );
+    HAL_Delay( 2 );
+    now_data = HAL_ADC_GetValue( &hadc );
     HAL_ADC_Stop( &hadc );
 
 #ifdef USE_USB_LOG
+    // Send debud in USB
     static char pack[10];
-    __itoa( adc_tmp, pack, 10 );
+    __itoa( now_data, pack, 10 );
     uint8_t len = strlen( pack );
     pack[len] = 0x0D;
     pack[len + 1] = 0x0A;
     CDC_Transmit_FS( (uint8_t*)pack, len + 2 );
 #endif
 
-    return 0;
+    if( now_data > THRESHOLD_DN )
+    {
+        // Checking data
+        raw_data[raw_data_idx] = now_data;
+        raw_data_idx++;
+        raw_data_idx &= DATA_MASK;
+
+        dif_data[dif_data_idx] = abs( now_data - last_data );
+        dif_data_idx++;
+        if( dif_data_idx == DATA_SIZE ) full_buff = 1;
+        dif_data_idx &= DATA_MASK;
+
+        // Analize data
+        if( full_buff )
+        {
+            for( uint8_t i = 0; i < DATA_SIZE; i++ )
+            {
+                if( raw_data[i] < THRESHOLD_UP ) return 0;
+                else
+                if( dif_data[i] > WAVE ) return 0;
+            }
+            return 1;    // Led ON!!!
+        }
+    }
+    else
+    {
+        full_buff    = 0;
+        raw_data_idx = 0;
+        dif_data_idx = 0;
+    }
+
+    return 0;  // Led OFF
 }
 
 /**
@@ -133,23 +187,18 @@ int check_led( void )
   */
 int main( void )
 {
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+  /* Init board */
   HAL_Init();
-  /* Configure the system clock */
   SystemClock_Config();
-  /* Initialize all configured peripherals */
   MX_GPIO_Init();
-#ifdef USE_USB_LOG
-  /* USB init function */
-  MX_USB_DEVICE_Init();
-#endif
-  /* ADC init function */
   MX_ADC_Init();
+#ifdef USE_USB_LOG
+  MX_USB_DEVICE_Init();
+#endif  
 
 
   HAL_Delay( 1000 );
   set_gift();
-
 
   while( 1 )
   {
