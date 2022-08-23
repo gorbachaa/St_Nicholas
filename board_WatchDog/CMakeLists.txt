@@ -55,7 +55,7 @@ set(LD_FILE ${CMAKE_CURRENT_SOURCE_DIR}/STM32F042F6Px_FLASH.ld)
 set(VECT_TAB_OFFSET_VALUE 0)
 set(HSE_VALUE             8000000)
 
-set(BOARD_NAME "st-nicklas-0" CACHE STRING "Name of board builds for.")
+set(BOARD_NAME "board_WatchDog" CACHE STRING "Name of board builds for.")
 mark_as_advanced(BOARD_NAME)
 set(BOARD_VERSION 0)
 

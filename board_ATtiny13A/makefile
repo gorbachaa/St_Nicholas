@@ -16,7 +16,7 @@
 #TOOL = c:/avr-gcc/WinAVR/20100110/bin/avr-
 #TOOL = c:/avr-gcc/kgp/20080530/bin/avr-
 #TOOL = F:/_Atmel/AVR_Toolchain/bin/avr-
-TOOL = C:/AVR_Toolchain/bin/avr-
+TOOL = C:/AVR_GCC/bin/avr-
 
 # Y/N - !!! N for gcc < 4.x
 MAKE_SMALLEST_HEX = Y
@@ -31,7 +31,7 @@ TRGPGMEXT := hex
 
 # project modules (directories with source files)
 # "current" directory (.) included automatically in gcc-avr.make
-MODULES := .
+MODULES := . ./Src
 
 
 # needed for includes below

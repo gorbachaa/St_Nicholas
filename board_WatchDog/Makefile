@@ -41,7 +41,7 @@ Middlewares
 PERIFLIB_PATH = 
 
 # Build path
-BUILD_DIR = ../build-$(TARGET)_ARM32_GCC_Makefile
+BUILD_DIR = ../build-board_WatchDog-GCC_ARM32_Makefile
 
 ######################################
 # source

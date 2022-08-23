@@ -60,9 +60,12 @@ ELFSIZE := $(SIZE) -A
 
 #-----------------------------------------------------------------------
 #
-OBJDIR := ./obj
-LSTDIR := ./lst
-EXEDIR := ./exe
+# Build path
+BUILD_DIR = ../build-board_ATtiny13A-GCC_AVR_Makefile
+
+OBJDIR := $(BUILD_DIR)/obj
+LSTDIR := $(BUILD_DIR)/lst
+EXEDIR := $(BUILD_DIR)/exe
 
 SRCDIRS := $(MODULES)
 INCDIRS := $(SRCDIRS)
