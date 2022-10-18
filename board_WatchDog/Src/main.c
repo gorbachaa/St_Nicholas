@@ -44,7 +44,8 @@
 #include "usbd_cdc_if.h"
 #endif
 
-
+#define SRV_V1        1
+//#define SRV_V2      1
 
 #define THRESHOLD_UP  ( 3900 )
 #define THRESHOLD_DN  ( 3700 )
@@ -108,8 +109,15 @@ void set_gift( void )
 {
     LED_RED_On();
     MX_TIM2_Init();
+#ifdef SRV_V1
     TIM2->CCR4 = 200;
     HAL_Delay( 3000 );
+#elif SRV_V2
+    TIM2->CCR4 = 250;
+    HAL_Delay( 3000 );
+    TIM2->CCR4 = 150;
+    HAL_Delay( 500 );
+#endif
     MX_TIM2_DeInit();
     LED_RED_Off();
 }
@@ -119,8 +127,15 @@ void dropping_gift( void )
 {
     LED_RED_On();
     MX_TIM2_Init();
+#ifdef SRV_V1
     TIM2->CCR4 = 200;
     HAL_Delay( 1000 );
+#elif SRV_V2
+    TIM2->CCR4 = 250;
+    HAL_Delay( 1000 );
+    TIM2->CCR4 = 150;
+    HAL_Delay( 500 );
+#endif
     MX_TIM2_DeInit();
     HAL_Delay( 1000 );
     LED_RED_Off();
