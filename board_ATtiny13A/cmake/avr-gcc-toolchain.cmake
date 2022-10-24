@@ -171,17 +171,19 @@ function(add_avr_executable EXECUTABLE_NAME)
       COMMAND
          ${AVR_OBJCOPY} -j .text -j .data -O ihex ${elf_file} ${hex_file}
       COMMAND
-         ${AVR_SIZE_TOOL} ${AVR_SIZE_ARGS} ${elf_file}
+      #${AVR_SIZE_TOOL} ${AVR_SIZE_ARGS} ${elf_file}
+      ${AVR_SIZE_TOOL} ${elf_file}
       DEPENDS ${elf_file}
    )
 
    add_custom_command(
-           OUTPUT ${bin_file}
-           COMMAND
-           ${AVR_OBJCOPY} -j .text -j .data -O binary ${elf_file} ${bin_file}
-           COMMAND
-           ${AVR_SIZE_TOOL} ${AVR_SIZE_ARGS} ${elf_file}
-           DEPENDS ${elf_file}
+       OUTPUT ${bin_file}
+       COMMAND
+       ${AVR_OBJCOPY} -j .text -j .data -O binary ${elf_file} ${bin_file}
+       #COMMAND
+       #${AVR_SIZE_TOOL} ${AVR_SIZE_ARGS} ${elf_file}
+       #${AVR_SIZE_TOOL} ${elf_file}
+       DEPENDS ${elf_file}
    )
 
    # eeprom
@@ -420,7 +422,7 @@ endif(CMAKE_BUILD_TYPE MATCHES Debug)
 add_definitions("-DF_CPU=${MCU_SPEED}")
 add_definitions("-fpack-struct")
 add_definitions("-fshort-enums")
-#add_definitions("-std=c11")
+add_definitions("-std=c99")
 add_definitions("-Wall")
 add_definitions("-Werror")
 #add_definitions("-pedantic")
@@ -430,6 +432,6 @@ add_definitions("-funsigned-bitfields")
 add_definitions("-ffunction-sections")
 add_definitions("-c")
 
-set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} -std=c99)
+set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS})
 #set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} -fno-threadsafe-statics)
 
