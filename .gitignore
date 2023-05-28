@@ -8,4 +8,4 @@ release/
 prog_board_WatchDog.cmd
 prog_board_WatchDog_SRVV1.cmd
 prog_board_WatchDog_SRVV2.cmd
-*.jpg
+*.exe
